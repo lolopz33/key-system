@@ -1,182 +1,374 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>DeepSeek Submarine</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-    <style>
-        body { 
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Courier New', monospace;
-            color: #0af;
-        }
-        
-        #vanta-bg {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        
-        #logo {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: pulse 2s infinite;
-        }
-        
-        #terminal {
-            position: absolute;
-            bottom: 20px;
-            width: 80%;
-            height: 150px;
-            background: rgba(0, 20, 40, 0.7);
-            border: 1px solid #0af;
-            border-radius: 5px;
-            padding: 10px;
-            overflow-y: auto;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        #dashboard {
-            position: absolute;
-            top: 100px;
-            right: 20px;
-            width: 200px;
-            background: rgba(0, 10, 20, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #0ff;
-        }
-        
-        .bubble {
-            position: absolute;
-            background: rgba(100, 200, 255, 0.6);
-            border-radius: 50%;
-            animation: rise linear infinite;
-        }
-        
-        @keyframes rise {
-            to { transform: translateY(-100vh); }
-        }
-        
-        @keyframes pulse {
-            0% { filter: drop-shadow(0 0 5px #0ff); }
-            50% { filter: drop-shadow(0 0 20px #0af); }
-            100% { filter: drop-shadow(0 0 5px #0ff); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerador Abissal de Keys</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Ubuntu+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+      color: #00ffff;
+    }
+
+    #vanta-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0, 20, 40, 0.2), rgba(0, 5, 10, 0.7));
+      z-index: -1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 30, 60, 0.3);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 100, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      margin: 10vh auto;
+      text-align: center;
+      border-top: 1px solid rgba(0, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(0, 150, 255, 0.5);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffff;
+      letter-spacing: 2px;
+    }
+
+    .key-display {
+      background: rgba(0, 50, 100, 0.3);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 18px;
+      font-family: 'Ubuntu Mono', monospace;
+      color: #00ffff;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .key-display::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        transparent 45%,
+        rgba(0, 255, 255, 0.1) 50%,
+        transparent 55%
+      );
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translate(-30%, -30%) rotate(0deg); }
+      100% { transform: translate(30%, 30%) rotate(360deg); }
+    }
+
+    button {
+      background: linear-gradient(45deg, #0066ff, #00ccff);
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+      transition: all 0.3s;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffff;
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        transparent 45%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 55%
+      );
+      animation: shine 3s infinite;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #00aaff;
+      text-shadow: 0 0 5px rgba(0, 100, 255, 0.5);
+    }
+
+    .spinner {
+      border: 4px solid rgba(0, 100, 255, 0.2);
+      border-top: 4px solid #00ffff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Bolhas subaquáticas */
+    .bubble {
+      position: absolute;
+      background: rgba(100, 200, 255, 0.6);
+      border-radius: 50%;
+      animation: rise linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rise {
+      to { transform: translateY(-100vh); }
+    }
+
+    /* Painel de status */
+    .status-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0, 30, 60, 0.5);
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .status-item {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: #0f0;
+      box-shadow: 0 0 5px #0f0;
+    }
+
+    /* Efeito de profundidade */
+    .depth-meter {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 20, 40, 0.7);
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #00ffff;
+    }
+  </style>
 </head>
 <body>
-    <div id="vanta-bg"></div>
-    
-    <!-- Logo animado -->
-    <div id="logo">
-        <svg width="120" height="120" viewBox="0 0 100 100">
-            <!-- Insira seu logo IA aqui -->
-            <path d="..." fill="#0ff" />
-        </svg>
+  <div id="vanta-bg"></div>
+  <div class="overlay"></div>
+
+  <!-- Elementos subaquáticos -->
+  <div class="depth-meter">
+    <div>PROFUNDIDADE: <span id="depth-value">1,024m</span></div>
+    <div>PRESSÃO: <span id="pressure-value">104 atm</span></div>
+  </div>
+
+  <div class="status-panel">
+    <div class="status-item">
+      <div class="status-indicator"></div>
+      <span>SISTEMA PRINCIPAL</span>
     </div>
-    
-    <!-- Painel de indicadores -->
-    <div id="dashboard">
-        <h3>SUBMARINE SYSTEMS</h3>
-        <div class="gauge">
-            <div>Profundidade: <span id="depth">1520m</span></div>
-            <progress value="70" max="100"></progress>
-        </div>
-        <div class="gauge">
-            <div>Pressão: <span id="pressure">215 atm</span></div>
-            <progress value="85" max="100"></progress>
-        </div>
-        <div class="status">
-            Status: <span class="ok">OPERACIONAL</span>
-        </div>
-        <div class="energy-bar">
-            <div class="energy-fill"></div>
-        </div>
+    <div class="status-item">
+      <div class="status-indicator"></div>
+      <span>GERADOR DE KEYS</span>
     </div>
-    
-    <!-- Terminal -->
-    <div id="terminal">
-        <div>> Sistema iniciado...</div>
-        <div>> Conectando ao núcleo...</div>
-        <div>> Analisando ambiente...</div>
-        <div>> Pronto para mergulho profundo</div>
+    <div class="status-item">
+      <div class="status-indicator"></div>
+      <span>CONEXÃO SEGURA</span>
     </div>
-    
-    <!-- Controle de som -->
-    <div id="sound-control">
-        <button onclick="toggleSound()">🔊</button>
+  </div>
+
+  <div class="container">
+    <h1>GERADOR ABISSAL DE KEYS</h1>
+
+    <div class="key-display" id="keyDisplay">>> AGUARDANDO COMANDO...</div>
+
+    <div class="spinner" id="loading" style="display: none;"></div>
+
+    <button id="generateBtn">INICIAR GERADOR</button>
+
+    <div class="footer">
+      SISTEMA DE CRIPTOGRAFIA S333 HUBS | VERSÃO 2.5.4
     </div>
-    
-    <script>
-        // Configuração do Vanta.js (fundo subaquático)
-        VANTA.NET({
-            el: "#vanta-bg",
-            color: 0x0088ff,
-            backgroundColor: 0x001122,
-            points: 12,
-            maxDistance: 20,
-            spacing: 15
-        });
-        
-        // Criar bolhas
-        function createBubbles() {
-            for (let i = 0; i < 50; i++) {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                const size = Math.random() * 20 + 5;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                bubble.style.left = `${Math.random() * 100}vw`;
-                bubble.style.bottom = `${Math.random() * 100}vh`;
-                bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
-                document.body.appendChild(bubble);
-            }
+  </div>
+
+  <audio id="sound-click" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_a6c9e21509.mp3?filename=click-124467.mp3"></audio>
+  <audio id="sound-ambient" src="https://cdn.pixabay.com/download/audio/2022/03/28/audio_70294d7cf4.mp3?filename=underwater-ambience-6368.mp3" loop autoplay></audio>
+  <audio id="sound-deep" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_306d8d2c2c.mp3?filename=deep-water-110192.mp3" loop></audio>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+
+  <script>
+    // Configuração do Vanta.js (fundo subaquático profundo)
+    VANTA.NET({
+      el: "#vanta-bg",
+      color: 0x0066ff,
+      backgroundColor: 0x001133,
+      points: 10,
+      maxDistance: 15,
+      spacing: 20,
+      showDots: false
+    });
+
+    // Elementos da UI
+    const btn = document.getElementById('generateBtn');
+    const display = document.getElementById('keyDisplay');
+    const loading = document.getElementById('loading');
+    const clickSound = document.getElementById('sound-click');
+    const deepSound = document.getElementById('sound-deep');
+    const depthValue = document.getElementById('depth-value');
+    const pressureValue = document.getElementById('pressure-value');
+
+    // Criar bolhas
+    function createBubbles() {
+      for (let i = 0; i < 30; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = Math.random() * 20 + 5;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}vw`;
+        bubble.style.bottom = `-${size}px`;
+        bubble.style.opacity = 0.3 + Math.random() * 0.5;
+        bubble.style.animationDuration = `${Math.random() * 15 + 5}s`;
+        bubble.style.animationDelay = `${Math.random() * 5}s`;
+        document.body.appendChild(bubble);
+      }
+    }
+
+    // Gerar key criptográfica
+    function generateCryptoKey() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const segments = [];
+      
+      for (let s = 0; s < 3; s++) {
+        let segment = '';
+        for (let i = 0; i < 6; i++) {
+          segment += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        
-        // Simular terminal
-        function simulateTerminal() {
-            const terminal = document.getElementById('terminal');
-            const messages = [
-                "> Coletando dados oceanográficos...",
-                "> Detectando vida marinha...",
-                "> Navegação autônoma ativada",
-                "> Escaneamento 3D iniciado"
-            ];
-            
-            setInterval(() => {
-                const newMsg = messages[Math.floor(Math.random() * messages.length)];
-                terminal.innerHTML += `<div>${newMsg}</div>`;
-                terminal.scrollTop = terminal.scrollHeight;
-            }, 3000);
-        }
-        
-        // Animação de energia
-        function energyPulse() {
-            const bar = document.querySelector('.energy-fill');
-            setInterval(() => {
-                bar.style.width = `${Math.random() * 80 + 20}%`;
-                bar.style.backgroundColor = `hsl(${Math.random() * 60 + 180}, 100%, 50%)`;
-            }, 1000);
-        }
-        
-        // Controle de som
-        function toggleSound() {
-            // Implementar áudio ambiente
-            console.log("Som ambiente toggled");
-        }
-        
-        // Inicialização
-        window.onload = function() {
-            createBubbles();
-            simulateTerminal();
-            energyPulse();
-        };
-    </script>
+        segments.push(segment);
+      }
+      
+      return `DEEP-${segments.join('-')}`;
+    }
+
+    // Simular leitura de profundidade
+    function simulateDepth() {
+      setInterval(() => {
+        const depth = 1000 + Math.floor(Math.random() * 5000);
+        const pressure = Math.floor(depth / 10) + Math.floor(Math.random() * 10);
+        depthValue.textContent = `${depth.toLocaleString()}m`;
+        pressureValue.textContent = `${pressure} atm`;
+      }, 3000);
+    }
+
+    // Evento de geração
+    btn.addEventListener('click', async () => {
+      // Efeitos sonoros
+      clickSound.currentTime = 0;
+      clickSound.play();
+      deepSound.currentTime = 0;
+      deepSound.play();
+      
+      // UI states
+      loading.style.display = 'block';
+      display.textContent = '>> ACESSANDO NÚCLEO CRIPTOGRÁFICO...';
+      btn.disabled = true;
+      
+      // Efeito de mergulho
+      await new Promise(resolve => setTimeout(resolve, 800));
+      display.textContent = '>> SINCRONIZANDO COM SISTEMAS ABISSAIS...';
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      display.textContent = '>> GERANDO SEQUÊNCIA DE CHAVE...';
+      
+      // Geração final
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      const newKey = generateCryptoKey();
+      
+      display.textContent = newKey;
+      loading.style.display = 'none';
+      btn.disabled = false;
+      
+      // Fade out do som de profundidade
+      setTimeout(() => {
+        const fadeOut = setInterval(() => {
+          if (deepSound.volume > 0.1) {
+            deepSound.volume -= 0.1;
+          } else {
+            deepSound.pause();
+            clearInterval(fadeOut);
+          }
+        }, 100);
+      }, 1000);
+    });
+
+    // Inicialização
+    window.onload = function() {
+      createBubbles();
+      simulateDepth();
+      
+      // Ajustar volume dos sons
+      soundAmbient.volume = 0.3;
+      deepSound.volume = 0;
+    };
+  </script>
 </body>
 </html>
