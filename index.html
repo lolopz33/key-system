@@ -1,239 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador Abissal de Keys</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Ubuntu+Mono&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      height: 100%;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-      color: #00ffff;
-      background: #001133; /* Fallback caso o Vanta falhe */
-    }
-
-    #vanta-bg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-    }
-
-    .fallback-bg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: -3;
-      background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-    }
-
-    .overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, rgba(0, 20, 40, 0.2), rgba(0, 5, 10, 0.7));
-      z-index: -1;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      background: rgba(0, 30, 60, 0.3);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-      box-shadow: 0 8px 32px rgba(0, 100, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 40px;
-      width: 90%;
-      max-width: 500px;
-      margin: 10vh auto;
-      text-align: center;
-      border-top: 1px solid rgba(0, 255, 255, 0.5);
-      border-bottom: 1px solid rgba(0, 150, 255, 0.5);
-    }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #00ffff;
-      letter-spacing: 2px;
-    }
-
-    .key-display {
-      background: rgba(0, 50, 100, 0.3);
-      border: 1px solid rgba(0, 255, 255, 0.2);
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px 0;
-      font-size: 18px;
-      font-family: 'Ubuntu Mono', monospace;
-      color: #00ffff;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      word-break: break-all;
-    }
-
-    button {
-      background: linear-gradient(45deg, #0066ff, #00ccff);
-      border: none;
-      padding: 15px 30px;
-      font-size: 16px;
-      border-radius: 30px;
-      cursor: pointer;
-      color: #fff;
-      font-weight: bold;
-      transition: all 0.3s;
-      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-      box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px #00ffff;
-    }
-
-    .spinner {
-      border: 4px solid rgba(0, 100, 255, 0.2);
-      border-top: 4px solid #00ffff;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-      box-shadow: 0 0 10px #00ffff;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Bolhas subaquáticas */
-    .bubble {
-      position: absolute;
-      background: rgba(100, 200, 255, 0.6);
-      border-radius: 50%;
-      animation: rise linear infinite;
-      z-index: 0;
-    }
-
-    @keyframes rise {
-      to { transform: translateY(-100vh); }
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>S333 HUBS | Acesso Premium</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <div class="fallback-bg"></div>
-  <div id="vanta-bg"></div>
-  <div class="overlay"></div>
-
-  <div class="container">
-    <h1>GERADOR ABISSAL DE KEYS</h1>
-    <div class="key-display" id="keyDisplay">>> AGUARDANDO COMANDO...</div>
-    <div class="spinner" id="loading" style="display: none;"></div>
-    <button id="generateBtn">INICIAR GERADOR</button>
+  
+  <div class="circle-container"></div>
+  
+  <div class="container-main-key">
+    <main>
+      <img src="/Main logo.png" alt="S333 HUBS Logo" class="logo"/>
+      <h1>Aqui está sua key</h1>
+      <div class="key-container">
+        <i id="icon-copy" class="fa-solid fa-copy"></i>
+        <span id="your-key">xxxx-xxx</span>
+      </div>
+    </main>
+    <footer>
+      © 2025 S333 HUBS. Todos os direitos reservados.
+    </footer>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-  
   <script>
-    // Função para inicializar o efeito Vanta.js
-    function initVanta() {
-      try {
-        return VANTA.NET({
-          el: "#vanta-bg",
-          color: 0x0066ff,
-          backgroundColor: 0x001133,
-          points: 10,
-          maxDistance: 15,
-          spacing: 20
-        });
-      } catch (e) {
-        console.error("Erro ao carregar Vanta.js:", e);
-        document.getElementById('vanta-bg').style.display = 'none';
-        return null;
-      }
-    }
-
-    // Criar bolhas
-    function createBubbles() {
-      for (let i = 0; i < 30; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        const size = Math.random() * 20 + 5;
-        bubble.style.width = `${size}px`;
-        bubble.style.height = `${size}px`;
-        bubble.style.left = `${Math.random() * 100}vw`;
-        bubble.style.bottom = `-${size}px`;
-        bubble.style.opacity = 0.3 + Math.random() * 0.5;
-        bubble.style.animationDuration = `${Math.random() * 15 + 5}s`;
-        bubble.style.animationDelay = `${Math.random() * 5}s`;
-        document.body.appendChild(bubble);
-      }
-    }
-
-    // Gerar key
-    function generateKey() {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let key = 'DEEP-';
-      for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 6; j++) {
-          key += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        if (i < 2) key += '-';
-      }
-      return key;
-    }
-
-    // Quando a página carregar
-    window.addEventListener('DOMContentLoaded', () => {
-      // Inicializar Vanta.js
-      const vantaEffect = initVanta();
-      
-      // Criar bolhas
-      createBubbles();
-      
-      // Elementos da UI
-      const btn = document.getElementById('generateBtn');
-      const display = document.getElementById('keyDisplay');
-      const loading = document.getElementById('loading');
-      
-      // Evento de clique
-      btn.addEventListener('click', () => {
-        loading.style.display = 'block';
-        btn.disabled = true;
-        display.textContent = '>> GERANDO CHAVE...';
-        
+    const containerCircle = document.querySelector(".circle-container")
+    const containerMain = document.querySelector(".container-main-key")
+    const yourKey = document.getElementById("your-key")
+    const iconCopy = document.getElementById("icon-copy")
+    const alertCopy = document.getElementById("alert-copy")
+    
+    function copiarTexto(texto) {
+      navigator.clipboard.writeText(texto)
+      .then(() => {
+        // Mostra o alerta de "copiado"
+        alertCopy.classList.add("show")
         setTimeout(() => {
-          const key = generateKey();
-          display.textContent = key;
-          loading.style.display = 'none';
-          btn.disabled = false;
-        }, 2000);
-      });
-    });
+          alertCopy.classList.remove("show")
+        }, 2000)
+      })
+      .catch((err) => {
+        console.error("Erro ao copiar:", err)
+      })
+    }
+    
+    fetch("https://script.google.com/macros/library/d/1jv6Wlimr-REjnjtVqDOK72zU1mptQt5C2LykIJVg1GjypCmSirPN_a2Q/5")
+    .then(response => response.text())
+    .then(data => {
+      containerCircle.style.display = "none"
+      containerMain.style.display = "block"
+      yourKey.textContent = data
+    })
 
-    // Fallback caso o Three.js não carregue
-    window.addEventListener('error', (e) => {
-      if (e.message.includes('Three') || e.message.includes('VANTA')) {
-        document.getElementById('vanta-bg').style.display = 'none';
-        document.querySelector('.fallback-bg').style.background = 
-          'radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%)';
-      }
-    }, true);
+    iconCopy.addEventListener("click", () => {
+      iconCopy.style.color = "#F6F6F6"
+      setTimeout(() => { iconCopy.style.color = "#CCCCCC" }, 200)
+      copiarTexto(yourKey.textContent)
+    })
   </script>
 </body>
 </html>
