@@ -3,110 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gerador de Keys Cósmicas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <title>Gerador Subaquático de Keys</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet"/>
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Orbitron', sans-serif;
-      background: #000;
-      color: #00ffee;
+      box-sizing: border-box;
     }
 
-    #particles-js {
+    body, html {
+      height: 100%;
+      font-family: 'Orbitron', sans-serif;
+      overflow: hidden;
+      color: white;
+    }
+
+    #background {
       position: absolute;
       width: 100%;
       height: 100%;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 20, 0.4);
+      backdrop-filter: blur(8px);
       z-index: -1;
-      background: radial-gradient(circle at bottom center, #020f1e, #000);
     }
 
     .container {
       position: relative;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
       padding: 40px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 0 25px #00ffee;
-      max-width: 500px;
       width: 90%;
+      max-width: 500px;
+      margin: 10vh auto;
+      text-align: center;
     }
 
     h1 {
-      font-size: 26px;
+      font-size: 24px;
       margin-bottom: 20px;
-      text-shadow: 0 0 15px #00ffff;
     }
 
     .key-display {
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid #00ffee;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 20px;
       border-radius: 10px;
-      font-family: monospace;
+      margin: 20px 0;
       font-size: 18px;
+      font-family: monospace;
       color: #00ffff;
-      margin: 20px 0;
-      box-shadow: inset 0 0 15px #00ffee66;
-    }
-
-    .checkbox-container {
-      color: #aaa;
-      font-size: 14px;
-      margin: 20px 0;
     }
 
     button {
-      background: #00ffee;
-      color: #000;
+      background: linear-gradient(45deg, #00c9ff, #92fe9d);
       border: none;
       padding: 15px 30px;
       font-size: 16px;
-      border-radius: 10px;
+      border-radius: 30px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px #00ffee;
+      color: #003;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.3s;
     }
 
     button:hover {
       transform: scale(1.05);
-      background: #00ffff;
-      box-shadow: 0 0 25px #00ffff, 0 0 50px #00ffee;
-    }
-
-    button:disabled {
-      background: #555;
-      color: #999;
-      box-shadow: none;
-      cursor: not-allowed;
+      box-shadow: 0 0 20px #00ffff;
     }
 
     .footer {
-      margin-top: 20px;
+      margin-top: 30px;
       font-size: 12px;
-      color: #888;
-    }
-
-    .loading {
-      display: none;
-      color: #aaa;
-      margin-top: 10px;
+      color: #ccc;
     }
 
     .spinner {
-      border: 4px solid rgba(255,255,255,0.2);
+      border: 4px solid rgba(255, 255, 255, 0.1);
       border-top: 4px solid #00ffff;
       border-radius: 50%;
       width: 30px;
       height: 30px;
       animation: spin 1s linear infinite;
-      margin: 10px auto;
+      margin: 20px auto;
     }
 
     @keyframes spin {
@@ -116,100 +107,64 @@
   </style>
 </head>
 <body>
+  <div id="background"></div>
+  <div class="overlay"></div>
 
-<div id="particles-js"></div>
+  <div class="container">
+    <h1>Terminal Subaquático de Key</h1>
 
-<div class="container">
-  <h1>🚀 Gerador de Keys Cósmicas</h1>
-  <div class="key-display" id="keyDisplay">Clique abaixo para gerar sua key</div>
+    <div class="key-display" id="keyDisplay">Clique abaixo para gerar sua chave.</div>
 
-  <div class="loading" id="loading">
-    <div class="spinner"></div>
-    <p>Gerando key estelar...</p>
+    <div class="spinner" id="loading" style="display: none;"></div>
+
+    <button id="generateBtn">Gerar Key</button>
+
+    <div class="footer">
+      © 2025 S333 HUBS | Submerged Key Engine
+    </div>
   </div>
 
-  <div class="checkbox-container">
-    <input type="checkbox" id="waitCheckbox" disabled>
-    <label for="waitCheckbox">Espere 1 hora para gerar uma nova key</label>
-  </div>
+  <audio id="sound-click" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_a6c9e21509.mp3?filename=click-124467.mp3"></audio>
+  <audio id="sound-ambient" src="https://cdn.pixabay.com/download/audio/2022/03/28/audio_70294d7cf4.mp3?filename=underwater-ambience-6368.mp3" loop autoplay></audio>
 
-  <button id="generateBtn">✨ Gerar Nova Key</button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.waves.min.js"></script>
 
-  <div class="footer">© 2025 S333 HUBS — Viagem além do comum</div>
-</div>
+  <script>
+    VANTA.WAVES({
+      el: "#background",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: 0x003366,
+      shininess: 50.00,
+      waveHeight: 15.00,
+      waveSpeed: 1.00,
+      zoom: 1.2
+    });
 
-<!-- Sons -->
-<audio id="sound-click" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
-<audio id="sound-success" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
-
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-<script>
-  particlesJS("particles-js", {
-    "particles": {
-      "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
-      "color": { "value": "#00ffff" },
-      "shape": { "type": "circle" },
-      "opacity": { "value": 0.4 },
-      "size": { "value": 3 },
-      "line_linked": { "enable": false },
-      "move": {
-        "enable": true,
-        "speed": 1.5,
-        "direction": "bottom",
-        "out_mode": "out"
-      }
-    },
-    "interactivity": {
-      "events": {
-        "onhover": { "enable": true, "mode": "repulse" }
-      }
-    },
-    "retina_detect": true
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const generateBtn = document.getElementById('generateBtn');
-    const keyDisplay = document.getElementById('keyDisplay');
-    const waitCheckbox = document.getElementById('waitCheckbox');
+    const btn = document.getElementById('generateBtn');
+    const display = document.getElementById('keyDisplay');
     const loading = document.getElementById('loading');
     const clickSound = document.getElementById('sound-click');
-    const successSound = document.getElementById('sound-success');
 
-    async function generateKey() {
+    btn.addEventListener('click', async () => {
       clickSound.play();
       loading.style.display = 'block';
-      generateBtn.disabled = true;
+      display.textContent = 'Gerando chave...';
+      btn.disabled = true;
 
-      const response = await callKeyGeneratorAPI();
-      keyDisplay.textContent = response.key || 'KEY-GERADA';
-
-      waitCheckbox.checked = true;
-
-      successSound.play();
-
-      setTimeout(() => {
-        generateBtn.disabled = false;
-        waitCheckbox.checked = false;
-      }, 3600000); // 1 hora
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const newKey = 'KEY-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      
+      display.textContent = newKey;
       loading.style.display = 'none';
-    }
-
-    function callKeyGeneratorAPI() {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const randomKey = 'KEY-' + Math.random().toString(36).substring(2, 10).toUpperCase()
-                         + '-' + Math.random().toString(36).substring(2, 10).toUpperCase();
-          resolve({ key: randomKey });
-        }, 1500);
-      });
-    }
-
-    generateBtn.addEventListener('click', generateKey);
-    waitCheckbox.addEventListener('change', function () {
-      if (!generateBtn.disabled) this.checked = false;
+      btn.disabled = false;
     });
-  });
-</script>
+  </script>
 </body>
 </html>
