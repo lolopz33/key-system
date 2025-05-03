@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>S333 HUBS | Acesso Premium</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <title>S333 HUBS | Experiência Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Major+Mono+Display&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
@@ -34,9 +34,36 @@
       align-items: center;
       position: relative;
       overflow: hidden;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%239B4AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>'), auto;
+    }
+
+    /* Efeito de cursor personalizado */
+    .custom-cursor {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      border: 2px solid var(--primary-light);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+    }
+
+    .cursor-dot {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background-color: var(--secondary);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.2s ease;
     }
     
-    /* Efeito de partículas cósmicas */
+    /* Efeito de partículas reativas */
     .particles {
       position: absolute;
       top: 0;
@@ -53,9 +80,10 @@
       border-radius: 50%;
       pointer-events: none;
       filter: blur(1px);
+      transition: transform 0.5s ease-out;
     }
     
-    /* Loader holográfico */
+    /* Loader holográfico com efeito sonoro */
     .circle-container {
       position: absolute;
       width: 120px;
@@ -104,7 +132,7 @@
       100% { transform: rotate(360deg); }
     }
     
-    /* Container principal - Efeito Holográfico */
+    /* Container principal com efeito de interface holográfica */
     .container-main-key {
       background: rgba(12, 14, 27, 0.6);
       backdrop-filter: blur(12px);
@@ -125,6 +153,14 @@
       animation: appear 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       position: relative;
       overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .container-main-key:hover {
+      transform: translateY(0) scale(1.01);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                  inset 0 0 40px rgba(138, 43, 226, 0.3),
+                  0 0 50px rgba(0, 245, 255, 0.25);
     }
     
     .container-main-key::before {
@@ -156,7 +192,7 @@
       100% { transform: translate(30%, 30%) rotate(360deg); }
     }
     
-    /* Título com efeito neon */
+    /* Título com efeito de digitação */
     h1 {
       font-size: 28px;
       font-weight: 600;
@@ -166,6 +202,7 @@
       display: inline-block;
       text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
       letter-spacing: 1px;
+      font-family: 'Major Mono Display', monospace;
     }
     
     h1::after {
@@ -181,7 +218,7 @@
       box-shadow: 0 0 15px var(--secondary);
     }
     
-    /* Container da Key - Efeito Futurista */
+    /* Container da Key com efeito de terminal futurista */
     .key-container {
       background: rgba(0, 0, 0, 0.25);
       border: 1px solid rgba(138, 43, 226, 0.3);
@@ -227,7 +264,7 @@
     }
     
     #your-key {
-      font-family: 'Inter', monospace;
+      font-family: 'Major Mono Display', monospace;
       font-size: 20px;
       letter-spacing: 1.5px;
       font-weight: 600;
@@ -235,9 +272,14 @@
       flex-grow: 1;
       text-align: center;
       text-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    #your-key:hover {
+      text-shadow: 0 0 20px rgba(0, 245, 255, 0.6);
     }
     
-    /* Botão de cópia - Efeito Glow */
+    /* Botão de cópia com efeito de toque */
     #icon-copy {
       color: var(--gray);
       font-size: 22px;
@@ -245,6 +287,7 @@
       transition: all 0.3s ease;
       padding: 8px;
       border-radius: 50%;
+      position: relative;
     }
     
     #icon-copy:hover {
@@ -253,8 +296,29 @@
       transform: scale(1.1);
       text-shadow: 0 0 15px var(--primary-light);
     }
+
+    #icon-copy::after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border: 2px solid var(--primary-light);
+      border-radius: 50%;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    #icon-copy:hover::after {
+      opacity: 1;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+    }
     
-    /* Alerta de cópia - Efeito Pop */
+    /* Alerta de cópia com efeito sonoro */
     #alert-copy {
       position: fixed;
       top: 30px;
@@ -276,7 +340,7 @@
       right: 30px;
     }
     
-    /* Rodapé estilizado */
+    /* Rodapé com efeito de scanline */
     footer {
       font-size: 13px;
       color: var(--gray);
@@ -295,6 +359,49 @@
       width: 100px;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.5), transparent);
+    }
+
+    /* Efeito de onda sonora visual */
+    .sound-wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 3px;
+      z-index: -1;
+      opacity: 0.3;
+    }
+
+    .wave-bar {
+      width: 4px;
+      background: linear-gradient(to top, var(--primary), var(--secondary));
+      border-radius: 2px;
+      animation: wave 1.5s infinite ease-in-out;
+    }
+
+    @keyframes wave {
+      0%, 100% { height: 10%; }
+      50% { height: 100%; }
+    }
+
+    /* Efeito de distorção holográfica */
+    .holographic-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(0deg, transparent 48%, rgba(0, 245, 255, 0.1) 49%, rgba(0, 245, 255, 0.1) 51%, transparent 52%),
+        linear-gradient(90deg, transparent 48%, rgba(0, 245, 255, 0.1) 49%, rgba(0, 245, 255, 0.1) 51%, transparent 52%);
+      background-size: 50px 50px;
+      pointer-events: none;
+      opacity: 0.1;
+      z-index: 2;
     }
     
     /* Responsividade */
@@ -321,6 +428,10 @@
 </head>
 <body>
   
+  <!-- Cursor personalizado -->
+  <div class="custom-cursor" id="custom-cursor"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+  
   <!-- Loader Holográfico -->
   <div class="circle-container">
     <div class="circle"></div>
@@ -328,13 +439,16 @@
     <div class="circle"></div>
   </div>
   
-  <!-- Efeito de Partículas Cósmicas -->
+  <!-- Efeito de Partículas Reativas -->
   <div class="particles" id="particles"></div>
   
   <!-- Container Principal -->
   <div class="container-main-key">
+    <!-- Efeito de distorção holográfica -->
+    <div class="holographic-overlay"></div>
+    
     <main>
-      <h1>Aqui está sua key</h1>
+      <h1 id="typing-title"></h1>
       <div class="key-container">
         <span id="your-key">xxxx-xxx</span>
         <i id="icon-copy" class="fa-solid fa-copy"></i>
@@ -343,12 +457,31 @@
     <footer>
       © 2025 S333 HUBS. Todos os direitos reservados.
     </footer>
+
+    <!-- Efeito de onda sonora -->
+    <div class="sound-wave" id="sound-wave">
+      <div class="wave-bar" style="animation-delay: 0s"></div>
+      <div class="wave-bar" style="animation-delay: 0.1s"></div>
+      <div class="wave-bar" style="animation-delay: 0.2s"></div>
+      <div class="wave-bar" style="animation-delay: 0.3s"></div>
+      <div class="wave-bar" style="animation-delay: 0.4s"></div>
+      <div class="wave-bar" style="animation-delay: 0.5s"></div>
+      <div class="wave-bar" style="animation-delay: 0.6s"></div>
+      <div class="wave-bar" style="animation-delay: 0.7s"></div>
+    </div>
   </div>
 
   <!-- Alerta de cópia -->
   <div id="alert-copy">
     <i class="fas fa-check-circle"></i> Key copiada com sucesso!
   </div>
+
+  <!-- Elementos de áudio (ocultos) -->
+  <audio id="hover-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-positive-interface-hover-257.mp3" preload="auto"></audio>
+  <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3" preload="auto"></audio>
+  <audio id="success-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" preload="auto"></audio>
+  <audio id="typing-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3" preload="auto"></audio>
+  <audio id="ambient-sound" src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" loop preload="auto"></audio>
 
   <script>
     // Elementos DOM
@@ -357,8 +490,62 @@
     const yourKey = document.getElementById("your-key")
     const iconCopy = document.getElementById("icon-copy")
     const alertCopy = document.getElementById("alert-copy")
-    
-    // Criar partículas cósmicas
+    const customCursor = document.getElementById("custom-cursor")
+    const cursorDot = document.getElementById("cursor-dot")
+    const typingTitle = document.getElementById("typing-title")
+    const soundWave = document.getElementById("sound-wave")
+
+    // Elementos de áudio
+    const hoverSound = document.getElementById("hover-sound")
+    const clickSound = document.getElementById("click-sound")
+    const successSound = document.getElementById("success-sound")
+    const typingSound = document.getElementById("typing-sound")
+    const ambientSound = document.getElementById("ambient-sound")
+
+    // Configuração de áudio
+    hoverSound.volume = 0.3
+    clickSound.volume = 0.4
+    successSound.volume = 0.5
+    typingSound.volume = 0.2
+    ambientSound.volume = 0.1
+
+    // Efeito de cursor personalizado
+    document.addEventListener('mousemove', (e) => {
+      customCursor.style.left = e.clientX + 'px'
+      customCursor.style.top = e.clientY + 'px'
+      cursorDot.style.left = e.clientX + 'px'
+      cursorDot.style.top = e.clientY + 'px'
+    })
+
+    document.addEventListener('mousedown', () => {
+      customCursor.style.width = '20px'
+      customCursor.style.height = '20px'
+    })
+
+    document.addEventListener('mouseup', () => {
+      customCursor.style.width = '30px'
+      customCursor.style.height = '30px'
+    })
+
+    // Efeito de digitação no título
+    function typeWriter(text, element, speed) {
+      let i = 0
+      element.innerHTML = ''
+      
+      function typing() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i)
+          if (i % 2 === 0) typingSound.currentTime = 0.1
+          typingSound.play()
+          i++
+          setTimeout(typing, speed)
+        }
+      }
+      
+      typing()
+    }
+
+    // Criar partículas reativas
     function createParticles() {
       const particlesContainer = document.getElementById('particles')
       const particleCount = window.innerWidth < 600 ? 30 : 50
@@ -380,6 +567,12 @@
         const delay = Math.random() * -20
         particle.style.animation = `float ${duration}s ${delay}s linear infinite`
         
+        // Efeito de interação
+        particle.addEventListener('mouseenter', () => {
+          particle.style.transform = `translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px)`
+          particle.style.opacity = '0.8'
+        })
+        
         particlesContainer.appendChild(particle)
       }
       
@@ -397,11 +590,20 @@
       document.head.appendChild(style)
     }
     
-    // Copiar texto
+    // Copiar texto com efeito
     function copiarTexto(texto) {
       navigator.clipboard.writeText(texto)
       .then(() => {
+        // Efeito visual e sonoro
         alertCopy.classList.add("show")
+        successSound.play()
+        
+        // Ativar onda sonora visual
+        soundWave.style.opacity = '0.6'
+        setTimeout(() => {
+          soundWave.style.opacity = '0.3'
+        }, 1000)
+        
         setTimeout(() => {
           alertCopy.classList.remove("show")
         }, 2000)
@@ -411,13 +613,42 @@
       })
     }
     
+    // Efeitos de hover com som
+    function addHoverEffects() {
+      const interactiveElements = [iconCopy, yourKey, containerMain]
+      
+      interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          hoverSound.currentTime = 0
+          hoverSound.play()
+          
+          // Efeito no cursor
+          customCursor.style.borderColor = 'var(--accent)'
+          customCursor.style.boxShadow = '0 0 15px var(--accent)'
+        })
+        
+        el.addEventListener('mouseleave', () => {
+          customCursor.style.borderColor = 'var(--primary-light)'
+          customCursor.style.boxShadow = 'none'
+        })
+      })
+      
+      iconCopy.addEventListener('click', () => {
+        clickSound.play()
+      })
+    }
+    
     // Buscar a key
-    fetch("https://script.google.com/macros/s/AKfycbyzXqI7BHsBgfH5KjlCSxlPoWBKoU7sKoVHL5HjkyqHMHH2prRmUunDRFlv4Wp955ww3g/exec")
+    fetch("https://script.google.com/macros/library/d/1jv6Wlimr-REjnjtVqDOK72zU1mptQt5C2LykIJVg1GjypCmSirPN_a2Q/5")
     .then(response => response.text())
     .then(data => {
       containerCircle.style.display = "none"
       containerMain.style.display = "block"
       yourKey.textContent = data
+      
+      // Iniciar efeitos após carregamento
+      typeWriter("Aqui está sua key", typingTitle, 100)
+      ambientSound.play()
     })
     .catch(error => {
       console.error("Erro ao buscar key:", error)
@@ -437,6 +668,15 @@
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
       createParticles()
+      addHoverEffects()
+      
+      // Efeito de onda sonora contínua
+      setInterval(() => {
+        const bars = soundWave.querySelectorAll('.wave-bar')
+        bars.forEach(bar => {
+          bar.style.height = `${Math.random() * 80 + 20}%`
+        })
+      }, 300)
     })
   </script>
 </body>
