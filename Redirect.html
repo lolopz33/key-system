@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
-
   <meta charset="UTF-8">
-  <title>Protegido</title>
+  <title>Verificação de Acesso</title>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const permitido = "https://linkvertise.com";
       const ref = document.referrer;
 
-      if (ref !== permitido) {
-        // Bloqueia o acesso se não veio do link correto
-        document.body.innerHTML = "<h1 style='color:red'>Acesso Negado</h1>";
+      if (ref.startsWith(permitido)) {
+        // Redireciona se a origem for permitida
+        window.location.href = "https://24534greger534y-33oyhbc6w-lolsupzs-projects-2b8bd174.vercel.app";
+      } else {
+        // Bloqueia se não veio da origem correta
+        document.body.innerHTML = "<h1 style='color:red'>Acesso Negado</h1><p>Você não tem permissão para acessar esta página.</p>";
         setTimeout(() => {
-          window.location.href = "https://google.com"; // ou qualquer página de erro
+          window.location.href = "https://google.com";
         }, 2000);
       }
     });
   </script>
-  <h1>Acesso Liberado</h1>
-  <p>Você veio de uma origem permitida.</p>
-</body>
-</html>
-
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=https://24534greger534y-33oyhbc6w-lolsupzs-projects-2b8bd174.vercel.app">
-  <title>Redirecionando...</title>
 </head>
 <body>
-  Se você não for redirecionado automaticamente, <a href="https://24534greger534y-33oyhbc6w-lolsupzs-projects-2b8bd174.vercel.app">clique aqui</a>.
+  <noscript>
+    <h1>JavaScript é necessário</h1>
+    <p>Ative o JavaScript para continuar.</p>
+  </noscript>
 </body>
 </html>
-
