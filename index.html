@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>S333 HUBS | Acesso Premium</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <title>S333 HUBS | Acesso VIP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
       --primary: #6C5CE7;
       --primary-dark: #5649C0;
-      --secondary: #00CEC9;
-      --dark: #2D3436;
+      --secondary: #00F5D4;
+      --dark: #1A1A2E;
       --light: #F6F6F6;
       --gray: #CCCCCC;
       --success: #00B894;
+      --cyber: #00F5D4;
+      --cyber-dark: #00CEC9;
     }
     
     * {
@@ -25,7 +27,7 @@
     
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
+      background: linear-gradient(135deg, #0F0C29, #302B63, #24243E);
       color: var(--light);
       min-height: 100vh;
       display: flex;
@@ -35,11 +37,19 @@
       overflow: hidden;
     }
     
-    /* Loader */
+    /* Efeitos de partículas */
+    .particle {
+      position: absolute;
+      background: rgba(108, 92, 231, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    
+    /* Loader futurista */
     .circle-container {
       position: absolute;
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -47,32 +57,33 @@
     
     .circle {
       position: absolute;
-      border: 4px solid transparent;
+      border: 3px solid transparent;
       border-radius: 50%;
       animation: rotate 1.5s linear infinite;
+      box-shadow: 0 0 10px currentColor;
     }
     
     .circle:nth-child(1) {
-      width: 60px;
-      height: 60px;
-      border-top-color: var(--primary);
-      border-bottom-color: var(--primary);
+      width: 80px;
+      height: 80px;
+      border-top-color: var(--cyber);
+      border-bottom-color: var(--cyber);
     }
     
     .circle:nth-child(2) {
-      width: 40px;
-      height: 40px;
-      border-left-color: var(--secondary);
-      border-right-color: var(--secondary);
+      width: 60px;
+      height: 60px;
+      border-left-color: var(--primary);
+      border-right-color: var(--primary);
       animation-duration: 1.2s;
       animation-direction: reverse;
     }
     
     .circle:nth-child(3) {
-      width: 20px;
-      height: 20px;
-      border-top-color: var(--light);
-      border-bottom-color: var(--light);
+      width: 40px;
+      height: 40px;
+      border-top-color: var(--secondary);
+      border-bottom-color: var(--secondary);
       animation-duration: 0.8s;
     }
     
@@ -83,11 +94,13 @@
     
     /* Container principal */
     .container-main-key {
-      background: rgba(45, 52, 54, 0.8);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
-                  0 0 0 1px rgba(255, 255, 255, 0.05);
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      border: 1px solid rgba(0, 245, 212, 0.2);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3),
+                  0 0 20px rgba(0, 245, 212, 0.1),
+                  inset 0 0 10px rgba(0, 245, 212, 0.05);
       width: 90%;
       max-width: 500px;
       padding: 40px 30px;
@@ -96,6 +109,32 @@
       transform: scale(0.95);
       opacity: 0;
       animation: fadeIn 0.5s ease-out forwards;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .container-main-key::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        transparent,
+        transparent,
+        transparent,
+        rgba(0, 245, 212, 0.1),
+        transparent
+      );
+      transform: rotate(30deg);
+      animation: shine 6s infinite;
+    }
+    
+    @keyframes shine {
+      0% { transform: rotate(30deg) translate(-30%, -30%); }
+      100% { transform: rotate(30deg) translate(30%, 30%); }
     }
     
     @keyframes fadeIn {
@@ -106,12 +145,15 @@
     }
     
     h1 {
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 28px;
+      font-weight: 700;
       margin-bottom: 30px;
-      color: var(--light);
+      color: var(--cyber);
       position: relative;
       display: inline-block;
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     
     h1::after {
@@ -120,51 +162,55 @@
       bottom: -8px;
       left: 50%;
       transform: translateX(-50%);
-      width: 50px;
-      height: 3px;
-      background: var(--secondary);
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyber), transparent);
       border-radius: 3px;
     }
     
     /* Container da Key */
     .key-container {
       background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 18px 20px;
+      border: 1px solid rgba(0, 245, 212, 0.3);
+      border-radius: 8px;
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 40px;
       transition: all 0.3s ease;
+      position: relative;
     }
     
     .key-container:hover {
-      border-color: rgba(0, 206, 201, 0.3);
-      box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.1);
+      border-color: var(--cyber);
+      box-shadow: 0 0 15px rgba(0, 245, 212, 0.3);
     }
     
     #your-key {
-      font-family: 'Inter', monospace;
-      font-size: 18px;
-      letter-spacing: 1px;
-      font-weight: 600;
-      color: var(--secondary);
+      font-family: 'Orbitron', monospace;
+      font-size: 20px;
+      letter-spacing: 2px;
+      font-weight: 500;
+      color: var(--cyber);
       flex-grow: 1;
       text-align: center;
+      text-shadow: 0 0 5px rgba(0, 245, 212, 0.5);
     }
     
     /* Ícone de copiar */
     #icon-copy {
       color: var(--gray);
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
       transition: all 0.2s ease;
+      margin-left: 15px;
     }
     
     #icon-copy:hover {
-      color: var(--secondary);
+      color: var(--cyber);
       transform: scale(1.1);
+      text-shadow: 0 0 8px rgba(0, 245, 212, 0.7);
     }
     
     /* Alerta de cópia */
@@ -172,13 +218,19 @@
       position: fixed;
       top: 20px;
       right: -100%;
-      background: var(--success);
-      color: white;
-      padding: 12px 20px;
+      background: var(--dark);
+      color: var(--cyber);
+      padding: 12px 25px;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--cyber);
+      box-shadow: 0 4px 15px rgba(0, 245, 212, 0.3);
       transition: right 0.3s ease;
       z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
     }
     
     #alert-copy.show {
@@ -190,6 +242,26 @@
       font-size: 12px;
       color: var(--gray);
       margin-top: 30px;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Efeito de digitação */
+    .typing-effect {
+      display: inline-block;
+      overflow: hidden;
+      border-right: 2px solid var(--cyber);
+      white-space: nowrap;
+      animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--cyber) }
     }
     
     /* Responsividade */
@@ -199,11 +271,16 @@
       }
       
       h1 {
-        font-size: 20px;
+        font-size: 22px;
       }
       
       #your-key {
         font-size: 16px;
+      }
+      
+      .circle-container {
+        width: 80px;
+        height: 80px;
       }
     }
   </style>
@@ -220,20 +297,23 @@
   <!-- Container Principal -->
   <div class="container-main-key">
     <main>
-      <h1>Aqui está sua key</h1>
+      <h1><span class="typing-effect">ACESSO VIP ATIVADO</span></h1>
       <div class="key-container">
         <span id="your-key">xxxx-xxx</span>
         <i id="icon-copy" class="fa-solid fa-copy"></i>
       </div>
+      <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">
+        <i class="fas fa-shield-alt" style="color: var(--cyber);"></i> Sua key é pessoal e intransferível
+      </p>
     </main>
     <footer>
-      © 2025 S333 HUBS. Todos os direitos reservados.
+      <i class="fas fa-lock"></i> © 2025 S333 HUBS. Todos os direitos reservados.
     </footer>
   </div>
 
   <!-- Alerta de cópia -->
   <div id="alert-copy">
-    <i class="fas fa-check-circle"></i> Key copiada!
+    <i class="fas fa-check-circle" style="color: var(--cyber);"></i> Key copiada com sucesso!
   </div>
 
   <script>
@@ -243,6 +323,40 @@
     const yourKey = document.getElementById("your-key")
     const iconCopy = document.getElementById("icon-copy")
     const alertCopy = document.getElementById("alert-copy")
+    
+    // Criar partículas
+    function createParticles() {
+      const particlesCount = 20;
+      for (let i = 0; i < particlesCount; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        
+        const size = Math.random() * 5 + 1;
+        const posX = Math.random() * window.innerWidth;
+        const posY = Math.random() * window.innerHeight;
+        const delay = Math.random() * 5;
+        const duration = Math.random() * 10 + 5;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}px`;
+        particle.style.top = `${posY}px`;
+        particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+        
+        document.body.appendChild(particle);
+      }
+    }
+    
+    // Animação de flutuação para partículas
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes float {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        50% { opacity: 0.5; }
+        100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
     
     // Copiar texto
     function copiarTexto(texto) {
@@ -262,9 +376,11 @@
     fetch("https://script.google.com/macros/s/AKfycbyzXqI7BHsBgfH5KjlCSxlPoWBKoU7sKoVHL5HjkyqHMHH2prRmUunDRFlv4Wp955ww3g/exec")
     .then(response => response.text())
     .then(data => {
-      containerCircle.style.display = "none"
-      containerMain.style.display = "block"
-      yourKey.textContent = data
+      setTimeout(() => {
+        containerCircle.style.display = "none"
+        containerMain.style.display = "block"
+        yourKey.textContent = data
+      }, 1500) // Atraso para mostrar o loader
     })
     .catch(error => {
       console.error("Erro ao buscar key:", error)
@@ -275,10 +391,17 @@
 
     // Evento de cópia
     iconCopy.addEventListener("click", () => {
-      iconCopy.style.color = "#F6F6F6"
-      setTimeout(() => { iconCopy.style.color = "#CCCCCC" }, 200)
+      iconCopy.classList.remove("fa-copy")
+      iconCopy.classList.add("fa-check")
+      setTimeout(() => { 
+        iconCopy.classList.remove("fa-check")
+        iconCopy.classList.add("fa-copy")
+      }, 1000)
       copiarTexto(yourKey.textContent)
     })
+    
+    // Inicializar partículas
+    createParticles();
   </script>
 </body>
 </html>
