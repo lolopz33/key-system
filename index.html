@@ -73,6 +73,7 @@
       justify-content: center;
       position: relative;
       overflow: hidden;
+      word-break: break-all;
     }
 
     .key-display::before {
@@ -115,6 +116,12 @@
     button:hover {
       transform: scale(1.05);
       box-shadow: 0 0 25px #00ffff;
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      transform: none;
+      box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
     }
 
     button::after {
@@ -207,6 +214,25 @@
       border-radius: 5px;
       border: 1px solid #00ffff;
     }
+
+    /* Alertas */
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 50, 100, 0.9);
+      border: 1px solid #f00;
+      padding: 15px;
+      border-radius: 5px;
+      max-width: 300px;
+      transform: translateX(120%);
+      transition: transform 0.3s;
+      z-index: 100;
+    }
+
+    .alert.show {
+      transform: translateX(0);
+    }
   </style>
 </head>
 <body>
@@ -248,9 +274,15 @@
     </div>
   </div>
 
+  <div class="alert" id="alert">
+    <div id="alert-message"></div>
+  </div>
+
   <audio id="sound-click" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_a6c9e21509.mp3?filename=click-124467.mp3"></audio>
   <audio id="sound-ambient" src="https://cdn.pixabay.com/download/audio/2022/03/28/audio_70294d7cf4.mp3?filename=underwater-ambience-6368.mp3" loop autoplay></audio>
   <audio id="sound-deep" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_306d8d2c2c.mp3?filename=deep-water-110192.mp3" loop></audio>
+  <audio id="sound-success" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0d906d0e1e.mp3?filename=success-1-6297.mp3"></audio>
+  <audio id="sound-error" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0a0a0a1a1e.mp3?filename=error-126627.mp3"></audio>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
@@ -273,8 +305,26 @@
     const loading = document.getElementById('loading');
     const clickSound = document.getElementById('sound-click');
     const deepSound = document.getElementById('sound-deep');
+    const successSound = document.getElementById('sound-success');
+    const errorSound = document.getElementById('sound-error');
     const depthValue = document.getElementById('depth-value');
     const pressureValue = document.getElementById('pressure-value');
+    const alertBox = document.getElementById('alert');
+    const alertMessage = document.getElementById('alert-message');
+
+    // URL do Google Apps Script
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzXqI7BHsBgfH5KjlCSxlPoWBKoU7sKoVHL5HjkyqHMHH2prRmUunDRFlv4Wp955ww3g/exec';
+
+    // Mostrar alerta
+    function showAlert(message, isError = false) {
+      alertMessage.textContent = message;
+      alertBox.style.borderColor = isError ? '#f00' : '#0f0';
+      alertBox.classList.add('show');
+      
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+      }, 5000);
+    }
 
     // Criar bolhas
     function createBubbles() {
@@ -293,22 +343,6 @@
       }
     }
 
-    // Gerar key criptográfica
-    function generateCryptoKey() {
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      const segments = [];
-      
-      for (let s = 0; s < 3; s++) {
-        let segment = '';
-        for (let i = 0; i < 6; i++) {
-          segment += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        segments.push(segment);
-      }
-      
-      return `DEEP-${segments.join('-')}`;
-    }
-
     // Simular leitura de profundidade
     function simulateDepth() {
       setInterval(() => {
@@ -319,45 +353,84 @@
       }, 3000);
     }
 
+    // Gerar key via API
+    async function generateKey() {
+      try {
+        // Primeiro estágio - preparação
+        display.textContent = '>> CONECTANDO AO SERVIDOR ABISSAL...';
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Segundo estágio - autenticação
+        display.textContent = '>> AUTENTICANDO CREDENCIAIS...';
+        await new Promise(resolve => setTimeout(resolve, 1200));
+        
+        // Chamada real à API
+        display.textContent = '>> GERANDO CHAVE CRIPTOGRÁFICA...';
+        
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'generateKey'
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          successSound.play();
+          return data.key;
+        } else {
+          throw new Error(data.message || 'Erro desconhecido');
+        }
+      } catch (error) {
+        errorSound.play();
+        throw error;
+      }
+    }
+
     // Evento de geração
     btn.addEventListener('click', async () => {
-      // Efeitos sonoros
-      clickSound.currentTime = 0;
-      clickSound.play();
-      deepSound.currentTime = 0;
-      deepSound.play();
-      
-      // UI states
-      loading.style.display = 'block';
-      display.textContent = '>> ACESSANDO NÚCLEO CRIPTOGRÁFICO...';
-      btn.disabled = true;
-      
-      // Efeito de mergulho
-      await new Promise(resolve => setTimeout(resolve, 800));
-      display.textContent = '>> SINCRONIZANDO COM SISTEMAS ABISSAIS...';
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      display.textContent = '>> GERANDO SEQUÊNCIA DE CHAVE...';
-      
-      // Geração final
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      const newKey = generateCryptoKey();
-      
-      display.textContent = newKey;
-      loading.style.display = 'none';
-      btn.disabled = false;
-      
-      // Fade out do som de profundidade
-      setTimeout(() => {
-        const fadeOut = setInterval(() => {
-          if (deepSound.volume > 0.1) {
-            deepSound.volume -= 0.1;
-          } else {
-            deepSound.pause();
-            clearInterval(fadeOut);
-          }
-        }, 100);
-      }, 1000);
+      try {
+        // Efeitos sonoros
+        clickSound.currentTime = 0;
+        clickSound.play();
+        deepSound.currentTime = 0;
+        deepSound.volume = 0.3;
+        deepSound.play();
+        
+        // UI states
+        loading.style.display = 'block';
+        btn.disabled = true;
+        
+        // Gerar a key
+        const key = await generateKey();
+        
+        // Exibir resultado
+        display.textContent = key;
+        showAlert('Chave gerada com sucesso!', false);
+      } catch (error) {
+        console.error('Erro ao gerar key:', error);
+        display.textContent = '>> ERRO: FALHA NA GERACAO';
+        showAlert(`Erro: ${error.message}`, true);
+      } finally {
+        loading.style.display = 'none';
+        btn.disabled = false;
+        
+        // Fade out do som de profundidade
+        setTimeout(() => {
+          const fadeOut = setInterval(() => {
+            if (deepSound.volume > 0.1) {
+              deepSound.volume -= 0.1;
+            } else {
+              deepSound.pause();
+              clearInterval(fadeOut);
+            }
+          }, 100);
+        }, 1000);
+      }
     });
 
     // Inicialização
@@ -368,6 +441,11 @@
       // Ajustar volume dos sons
       soundAmbient.volume = 0.3;
       deepSound.volume = 0;
+      
+      // Mostrar instrução inicial
+      setTimeout(() => {
+        showAlert('Sistema pronto para gerar chaves criptográficas', false);
+      }, 2000);
     };
   </script>
 </body>
